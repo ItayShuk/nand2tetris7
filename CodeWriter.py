@@ -1,5 +1,4 @@
 class CodeWriter:
-
     segmentsCodes = {"local": "LCL",
                      "argument": "ARG",
                      "this": "THIS",
@@ -8,18 +7,19 @@ class CodeWriter:
                      "temp": "5"}
 
     def __init__(self, fileOrders, fileDest):
-        output = open(fileDest[:-2] + "asm","w+")
+        output = open(fileDest[:-2] + "asm", "w+")
         for order in fileOrders:
             self.writeOrder(order, output)
 
     def writeOrder(self, order, output):
-        switch = {
-            "push": self.pushCommand(order[1], order[2], output),
-            "pop": self.popCommand(order[1], order[2], output),
-            "add": self.add(output),
-            "sub": self.sub(output)
-        }
-        switch.get(order[0])
+        if order[0] == "push":
+            self.pushCommand(order[1], order[2], output)
+        elif order[0] == "pop":
+            self.popCommand(order[1], order[2], output)
+        elif order[0] == "add":
+            self.add(output)
+        else:
+            self.sub(output)
 
     def pushCommand(self, variable, index, output):
         if variable == "constant":
