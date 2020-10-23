@@ -1,6 +1,7 @@
 def main():
     a = 0
     a += 3
+    x=5
     return
 
 
