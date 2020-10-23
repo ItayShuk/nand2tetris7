@@ -1,6 +1,3 @@
-import re
-
-
 class Parser:
     orderList = []
 
@@ -8,7 +5,6 @@ class Parser:
         lineList = [line.rstrip('\n') for line in open(filePath) if line.strip()]
         cleanList = self.cleanTheList(lineList)
         self.orderList = self.setOrders(cleanList)
-        print(self.orderList)
 
     def cleanTheList(self, list):
         cleanList = []
