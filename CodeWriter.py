@@ -1,5 +1,4 @@
 class CodeWriter:
-
     segmentsCodes = {"local": "LCL",
                      "argument": "ARG",
                      "this": "THIS",
@@ -43,15 +42,16 @@ class CodeWriter:
             output.write("M=M+1\n")
 
     def popCommand(self, order, output):
-        output.write("@"+order[2]+"\n")
+        output.write("@" + order[2] + "\n")
         output.write("D=A\n")
-        output.write("@"+self.segmentsCodes[order[1]]+"\n")
+        output.write("@" + self.segmentsCodes[order[1]] + "\n")
         output.write("D=A+D\n")
-        output.write("@"+self.segmentsCodes["temp"]+"\n")
+        output.write("@" + self.segmentsCodes["temp"] + "\n")
         output.write("M=D\n")
         output.write("@SP\n")
         output.write("M=M-1\n")
         output.write("A=M\n")
         output.write("D=M\n")
-        output.write("@"+self.segmentsCodes["temp"]+"\n")
-        output.write()
+        output.write("@" + self.segmentsCodes["temp"] + "\n")
+        output.write("A=M\n")
+        output.write("M=D\n")
