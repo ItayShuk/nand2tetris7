@@ -1,4 +1,5 @@
 class CodeWriter:
+
     segmentsCodes = {"local": "LCL",
                      "argument": "ARG",
                      "this": "THIS",
@@ -7,7 +8,7 @@ class CodeWriter:
                      "temp": "5"}
 
     def __init__(self, fileOrders, fileDest):
-        output = open(fileDest[:-2] + "asm")
+        output = open(fileDest[:-2] + "asm","w+")
         for order in fileOrders:
             self.writeOrder(order, output)
 
