@@ -1,8 +1,10 @@
+import sys, CodeWriter
+from Parser import Parser
+
+
 def main():
-    a = 0
-    a += 3
-    x = 5
-    x += 1
+
+    file = Parser(sys.argv[1])
     return
 
 
