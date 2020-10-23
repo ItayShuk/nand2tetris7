@@ -1,16 +1,4 @@
 class CodeWriter:
-    RAM = []
-    memoryPointers = [("SP", 256),
-                      ("local", 300),
-                      ("argument", 400),
-                      ("temp", 5),
-                      ("this", 3000),
-                      ("that", 3010),
-                      ("pointer", 500),
-                      ("static", 16)
-                      ]
-
-    SP = 0
 
     segmentsCodes = {"local": "LCL",
                      "argument": "ARG",
@@ -38,8 +26,10 @@ class CodeWriter:
             output.write("@" + order[2] + "\n")
             output.write("D=A\n")
             output.write("@SP\n")
+            output.write("A=M\n")
             output.write("M=D\n")
-            output.write("A=A+1\n")
+            output.write("@SP\n")
+            output.write("M=M+1\n")
         else:
             output.write("@" + order[2] + "\n")
             output.write("D=A\n")
@@ -47,5 +37,21 @@ class CodeWriter:
             output.write("A=A+D\n")
             output.write("D=M\n")
             output.write("@SP\n")
+            output.write("A=M\n")
             output.write("M=D\n")
-            output.write("A=A+1\n")
+            output.write("@SP\n")
+            output.write("M=M+1\n")
+
+    def popCommand(self, order, output):
+        output.write("@"+order[2]+"\n")
+        output.write("D=A\n")
+        output.write("@"+self.segmentsCodes[order[1]]+"\n")
+        output.write("D=A+D\n")
+        output.write("@"+self.segmentsCodes["temp"]+"\n")
+        output.write("M=D\n")
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("A=M\n")
+        output.write("D=M\n")
+        output.write("@"+self.segmentsCodes["temp"]+"\n")
+        output.write()
