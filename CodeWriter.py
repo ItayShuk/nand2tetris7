@@ -34,7 +34,8 @@ class CodeWriter:
         switch.get(order[0])
 
     def pushCommand(self, order, output):
-        output.write("@" + order[2]+"\n")
+        output.write("@" + order[2] + "\n")
         output.write("D=A\n")
-        output.write("@")
-
+        output.write("@" + order[1] + "\n")
+        output.write("M=D\n")
+        output.write("A=A+1\n")
