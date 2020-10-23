@@ -3,7 +3,6 @@ from Parser import Parser
 
 
 def main():
-
     file = Parser(sys.argv[1])
     return
 

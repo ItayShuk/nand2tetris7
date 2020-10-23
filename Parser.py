@@ -4,6 +4,7 @@ class Parser:
         lineList = [line.rstrip('\n') for line in open(filePath) if line.strip()]
         cleanList = self.cleanTheList(lineList)
         orderList = self.setOrders(cleanList)
+        print(orderList)
 
     def cleanTheList(self, list):
         cleanList = []
@@ -16,3 +17,7 @@ class Parser:
 
     def setOrders(self, cleanList):
         ordersList = []
+        for line in cleanList:
+            ordersList.append(line.split(" "))
+        return ordersList
+
