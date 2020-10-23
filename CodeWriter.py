@@ -34,8 +34,18 @@ class CodeWriter:
         switch.get(order[0])
 
     def pushCommand(self, order, output):
-        output.write("@" + order[2] + "\n")
-        output.write("D=A\n")
-        output.write("@" + order[1] + "\n")
-        output.write("M=D\n")
-        output.write("A=A+1\n")
+        if order[1] == "constant":
+            output.write("@" + order[2] + "\n")
+            output.write("D=A\n")
+            output.write("@SP\n")
+            output.write("M=D\n")
+            output.write("A=A+1\n")
+        else:
+            output.write("@" + order[2] + "\n")
+            output.write("D=A\n")
+            output.write("@" + self.segmentsCodes[order[1]] + "\n")
+            output.write("A=A+D\n")
+            output.write("D=M\n")
+            output.write("@SP\n")
+            output.write("M=D\n")
+            output.write("A=A+1\n")
