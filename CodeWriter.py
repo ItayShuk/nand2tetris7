@@ -29,7 +29,7 @@ class CodeWriter:
         elif order[0] == "not":
             self.unaryCommand(output, "!")
         # else:
-            # self.sub(output)
+        # self.sub(output)
         ## need to add gt, lt, eq, and what happens if order is not valid
 
     def pushCommand(self, variable, index, output):
@@ -103,3 +103,57 @@ class CodeWriter:
         output.write("M=M" + operation + "D" + "\n")
         output.write("@SP\n")
         output.write("M=M+1\n")
+
+    def eqCommand(self, output):
+
+        self.binaryCommand(output, "-")
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("D=M\n")
+
+        output.write("@EQ\n")
+        output.write("D;JEQ\n")
+
+        output.write("(NOTEQ)\n")
+        output.write("@0\n")
+        output.write("D=A\n")
+        output.write("@WRITE\n")
+        output.write("0;JMP\n")
+
+        output.write("(EQ)\n")
+        output.write("@1\n")
+        output.write("D=A\n")
+        output.write("@WRITE\n")
+        output.write("0;JMP\n")
+
+        output.write("(WRITE)\n")
+        output.write("@SP\n")
+        output.write("M=A\n")
+        output.write("M=D\n")
+
+    def ltCommand(self, output):
+
+        self.binaryCommand(output, "-")
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("D=M\n")
+
+        output.write("@EQ\n")
+        output.write("D;JEQ\n")
+
+        output.write("(NOTEQ)\n")
+        output.write("@0\n")
+        output.write("D=A\n")
+        output.write("@WRITE\n")
+        output.write("0;JMP\n")
+
+        output.write("(EQ)\n")
+        output.write("@1\n")
+        output.write("D=A\n")
+        output.write("@WRITE\n")
+        output.write("0;JMP\n")
+
+        output.write("(WRITE)\n")
+        output.write("@SP\n")
+        output.write("M=A\n")
+        output.write("M=D\n")
