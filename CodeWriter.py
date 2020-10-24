@@ -28,6 +28,12 @@ class CodeWriter:
             self.unaryCommand(output, "-")
         elif order[0] == "not":
             self.unaryCommand(output, "!")
+        elif order[0] == "eq":
+            self.jumpCommand(output, "JEQ")
+        elif order[0] == "lt":
+            self.jumpCommand(output, "JLT")
+        elif order[0] == "gt":
+            self.jumpCommand(output, "JGT")
         # else:
         # self.sub(output)
         ## need to add gt, lt, eq, and what happens if order is not valid
@@ -104,50 +110,23 @@ class CodeWriter:
         output.write("@SP\n")
         output.write("M=M+1\n")
 
-    def eqCommand(self, output):
+    def jumpCommand(self, output, jumpCommand):
 
         self.binaryCommand(output, "-")
         output.write("@SP\n")
         output.write("M=M-1\n")
         output.write("D=M\n")
 
-        output.write("@EQ\n")
-        output.write("D;JEQ\n")
+        output.write("@IS\n")
+        output.write("D;" + jumpCommand + "\n")
 
-        output.write("(NOTEQ)\n")
+        output.write("(ISNT)\n")
         output.write("@0\n")
         output.write("D=A\n")
         output.write("@WRITE\n")
         output.write("0;JMP\n")
 
-        output.write("(EQ)\n")
-        output.write("@1\n")
-        output.write("D=A\n")
-        output.write("@WRITE\n")
-        output.write("0;JMP\n")
-
-        output.write("(WRITE)\n")
-        output.write("@SP\n")
-        output.write("M=A\n")
-        output.write("M=D\n")
-
-    def ltCommand(self, output):
-
-        self.binaryCommand(output, "-")
-        output.write("@SP\n")
-        output.write("M=M-1\n")
-        output.write("D=M\n")
-
-        output.write("@EQ\n")
-        output.write("D;JEQ\n")
-
-        output.write("(NOTEQ)\n")
-        output.write("@0\n")
-        output.write("D=A\n")
-        output.write("@WRITE\n")
-        output.write("0;JMP\n")
-
-        output.write("(EQ)\n")
+        output.write("(IS)\n")
         output.write("@1\n")
         output.write("D=A\n")
         output.write("@WRITE\n")
