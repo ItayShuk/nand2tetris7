@@ -17,30 +17,57 @@ class CodeWriter:
         elif order[0] == "pop":
             self.popCommand(order[1], order[2], output)
         elif order[0] == "add":
-            self.add(output)
-        else:
-            self.sub(output)
+            self.binaryCommand(output, "+")
+        elif order[0] == "sub":
+            self.binaryCommand(output, "-")
+        elif order[0] == "and":
+            self.binaryCommand(output, "&")
+        elif order[0] == "or":
+            self.binaryCommand(output, "|")
+        elif order[0] == "neg":
+            self.unaryCommand(output, "-")
+        elif order[0] == "not":
+            self.unaryCommand(output, "!")
+        # else:
+            # self.sub(output)
+        ## need to add gt, lt, eq, and what happens if order is not valid
 
     def pushCommand(self, variable, index, output):
         if variable == "constant":
             output.write("@" + index + "\n")
             output.write("D=A\n")
-            output.write("@SP\n")
-            output.write("A=M\n")
-            output.write("M=D\n")
-            output.write("@SP\n")
-            output.write("M=M+1\n")
+            self.pushToStack(output)
+
+        elif variable == "local" or variable == "that" or variable == "this" or variable == "argument":
+            output.write("@" + index + "\n")
+            output.write("D=A\n")
+            output.write("@" + self.segmentsCodes[variable] + "\n")
+            output.write("A=M+D\n")
+            output.write("D=M\n")
+            self.pushToStack(output)
+
+        elif variable == "pointer" or variable == "temp":
+            output.write("@" + index + "\n")
+            output.write("D=A\n")
+            output.write("@" + self.segmentsCodes[variable] + "\n")
+            output.write("A=M+D\n")
+            output.write("D=M\n")
+            self.pushToStack(output)
+
         else:
             output.write("@" + index + "\n")
             output.write("D=A\n")
             output.write("@" + self.segmentsCodes[variable] + "\n")
             output.write("A=A+D\n")
             output.write("D=M\n")
-            output.write("@SP\n")
-            output.write("A=M\n")
-            output.write("M=D\n")
-            output.write("@SP\n")
-            output.write("M=M+1\n")
+            self.pushToStack(output)
+
+    def pushToStack(self, output):
+        output.write("@SP\n")
+        output.write("A=M\n")
+        output.write("M=D\n")
+        output.write("@SP\n")
+        output.write("M=M+1\n")
 
     def popCommand(self, variable, index, output):
         output.write("@" + index + "\n")
@@ -57,19 +84,22 @@ class CodeWriter:
         output.write("A=M\n")
         output.write("M=D\n")
 
-    def add(self, output):
-        self.preAddSub(output)
-        output.write("M=D+M" + "\n")
-        self.pushCommand("temp", "2", output)
+    def unaryCommand(self, output, operation):
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("A=M\n")
+        output.write("M=" + operation + "M\n")
+        output.write("@SP\n")
+        output.write("M=M+1\n")
 
-    def sub(self, output):
-        self.preAddSub(output)
-        output.write("M=D-M" + "\n")
-        self.pushCommand("temp", "2", output)
-
-    def preAddSub(self, output):
-        self.popCommand("temp", "1", output)
-        self.popCommand("temp", "2", output)
-        output.write("@" + str(int(self.segmentsCodes["temp"]) + 1) + "\n")
-        output.write("D=M")
-        output.write("@" + str(int(self.segmentsCodes["temp"]) + 2) + "\n")
+    def binaryCommand(self, output, operation):
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("A=M\n")
+        output.write("D=M\n")
+        output.write("@SP\n")
+        output.write("M=M-1\n")
+        output.write("A=M\n")
+        output.write("M=M" + operation + "D" + "\n")
+        output.write("@SP\n")
+        output.write("M=M+1\n")
