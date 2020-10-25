@@ -5,7 +5,6 @@ from CodeWriter import CodeWriter
 
 def main():
     file = Parser(sys.argv[1])
-    print(file.orderList)
     CodeWriter(file.orderList, sys.argv[1])
     return
 
