@@ -6,10 +6,13 @@ class CodeWriter:
                      "pointer": "3",
                      "temp": "5"}
 
+    line = 0
+
     def __init__(self, fileOrders, fileDest):
         output = open(fileDest[:-2] + "asm", "w+")
         for order in fileOrders:
             self.writeOrder(order, output)
+            self.line += 1
 
     def writeOrder(self, order, output):
         if order[0] == "push":
@@ -118,22 +121,24 @@ class CodeWriter:
         output.write("A=M\n")
         output.write("D=M\n")
 
-        output.write("@IS\n")
+        output.write("@IS"+str(self.line)+"\n")
         output.write("D;" + jumpCommand + "\n")
 
-        output.write("(ISNT)\n")
+        output.write("(ISNT"+str(self.line)+")\n")
         output.write("@0\n")
         output.write("D=A\n")
-        output.write("@WRITE\n")
+        output.write("@WRITE"+str(self.line)+"\n")
         output.write("0;JMP\n")
 
-        output.write("(IS)\n")
+        output.write("(IS"+str(self.line)+")\n")
         output.write("@1\n")
         output.write("D=A\n")
-        output.write("@WRITE\n")
+        output.write("@WRITE"+str(self.line)+"\n")
         output.write("0;JMP\n")
 
-        output.write("(WRITE)\n")
+        output.write("(WRITE"+str(self.line)+")\n")
         output.write("@SP\n")
-        output.write("M=A\n")
-        output.write("M=D\n")
+        output.write("A=M\n")
+        output.write("M=-D\n")
+        output.write("@SP\n")
+        output.write("M=M+1\n")
