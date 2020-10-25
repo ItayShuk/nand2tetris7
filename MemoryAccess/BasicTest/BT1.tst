@@ -5,6 +5,6 @@ set RAM[3] 3000,  // base address of the this segment
 set RAM[4] 3010,  // base address of the that segment
 
 
-repeat 50 {      // enough cycles to complete the execution
+repeat 200 {      // enough cycles to complete the execution
   ticktock;
 }

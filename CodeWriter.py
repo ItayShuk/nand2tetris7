@@ -59,7 +59,7 @@ class CodeWriter:
             output.write("@" + index + "\n")
             output.write("D=A\n")
             output.write("@" + self.segmentsCodes[variable] + "\n")
-            output.write("A=M+D\n")
+            output.write("A=A+D\n")
             output.write("D=M\n")
             self.pushToStack(output)
 
@@ -82,16 +82,17 @@ class CodeWriter:
         output.write("@" + index + "\n")
         output.write("D=A\n")
         output.write("@" + self.segmentsCodes[variable] + "\n")
-        output.write("D=M+D\n")
+        if variable=="temp":
+            output.write("D=A+D\n")
+        else:
+            output.write("D=M+D\n")
         output.write("@" + self.segmentsCodes["temp"] + "\n")
-        output.write("A=M\n")
         output.write("M=D\n")
         output.write("@SP\n")
         output.write("M=M-1\n")
         output.write("A=M\n")
         output.write("D=M\n")
         output.write("@" + self.segmentsCodes["temp"] + "\n")
-        output.write("A=M\n")
         output.write("A=M\n")
         output.write("M=D\n")
 
