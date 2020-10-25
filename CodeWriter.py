@@ -115,6 +115,7 @@ class CodeWriter:
         self.binaryCommand(output, "-")
         output.write("@SP\n")
         output.write("M=M-1\n")
+        output.write("A=M\n")
         output.write("D=M\n")
 
         output.write("@IS\n")
