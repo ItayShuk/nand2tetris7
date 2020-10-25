@@ -71,8 +71,8 @@ class CodeWriter:
             self.pushToStack(output)
 
         elif variable == "static":
-            output.write("@"+self.fileName+"."+index+"\n")
-            output.write("D=A\n")
+            output.write("@"+self.fileName+index+"\n")
+            output.write("D=M\n")
             self.pushToStack(output)
 
         else:
@@ -92,7 +92,7 @@ class CodeWriter:
 
     def popCommand(self, variable, index, output):
         if variable == "static":
-            output.write("@"+self.fileName+"."+index+"\n")
+            output.write("@"+self.fileName+index+"\n")
             output.write("D=A\n")
         else:
             output.write("@" + index + "\n")
