@@ -8,11 +8,18 @@ class CodeWriter:
 
     line = 0
 
+    fileName = ""
+
     def __init__(self, fileOrders, fileDest):
         output = open(fileDest[:-2] + "asm", "w+")
+        self.fileName = self.getFileName(fileDest)
         for order in fileOrders:
             self.writeOrder(order, output)
             self.line += 1
+
+    def getFileName(self, fileDest):
+        splitted = fileDest.split("\\")
+        return splitted[len(splitted)-1][:-2]
 
     def writeOrder(self, order, output):
         if order[0] == "push":
@@ -63,6 +70,11 @@ class CodeWriter:
             output.write("D=M\n")
             self.pushToStack(output)
 
+        elif variable == "static":
+            output.write("@"+self.fileName+"."+index+"\n")
+            output.write("D=A\n")
+            self.pushToStack(output)
+
         else:
             output.write("@" + index + "\n")
             output.write("D=A\n")
@@ -79,13 +91,17 @@ class CodeWriter:
         output.write("M=M+1\n")
 
     def popCommand(self, variable, index, output):
-        output.write("@" + index + "\n")
-        output.write("D=A\n")
-        output.write("@" + self.segmentsCodes[variable] + "\n")
-        if variable=="temp":
-            output.write("D=A+D\n")
+        if variable == "static":
+            output.write("@"+self.fileName+"."+index+"\n")
+            output.write("D=A\n")
         else:
-            output.write("D=M+D\n")
+            output.write("@" + index + "\n")
+            output.write("D=A\n")
+            output.write("@" + self.segmentsCodes[variable] + "\n")
+            if variable == "temp" or variable == "pointer":
+                output.write("D=A+D\n")
+            else:
+                output.write("D=M+D\n")
         output.write("@" + self.segmentsCodes["temp"] + "\n")
         output.write("M=D\n")
         output.write("@SP\n")
@@ -124,22 +140,22 @@ class CodeWriter:
         output.write("A=M\n")
         output.write("D=M\n")
 
-        output.write("@IS"+str(self.line)+"\n")
+        output.write("@IS" + str(self.line) + "\n")
         output.write("D;" + jumpCommand + "\n")
 
-        output.write("(ISNT"+str(self.line)+")\n")
+        output.write("(ISNT" + str(self.line) + ")\n")
         output.write("@0\n")
         output.write("D=A\n")
-        output.write("@WRITE"+str(self.line)+"\n")
+        output.write("@WRITE" + str(self.line) + "\n")
         output.write("0;JMP\n")
 
-        output.write("(IS"+str(self.line)+")\n")
+        output.write("(IS" + str(self.line) + ")\n")
         output.write("@1\n")
         output.write("D=A\n")
-        output.write("@WRITE"+str(self.line)+"\n")
+        output.write("@WRITE" + str(self.line) + "\n")
         output.write("0;JMP\n")
 
-        output.write("(WRITE"+str(self.line)+")\n")
+        output.write("(WRITE" + str(self.line) + ")\n")
         output.write("@SP\n")
         output.write("A=M\n")
         output.write("M=-D\n")
